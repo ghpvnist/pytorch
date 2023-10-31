@@ -85,14 +85,6 @@ static constexpr int64_t kUnboundedSize = std::numeric_limits<int64_t>::min();
 std::vector<int64_t> GetPromotedShape(
     c10::ArrayRef<int64_t> shape1_dims,
     c10::ArrayRef<int64_t> shape2_dims) {
-  std::cout << "lazy::core::GetPromotedShape\n";
-  std::cout << "\tinput shape1[";
-  for(auto x : shape1_dims) std::cout << x << ", ";
-  std::cout << "]\n";
-  std::cout << "\tinput shape2[";
-  for(auto x : shape2_dims) std::cout << x << ", ";
-  std::cout << "]\n";
-
   std::vector<int64_t> dimensions;
   // If the rank of a shape is bigger than then other, fill up the first
   // dimensions with the ones of the bigger.
@@ -127,7 +119,6 @@ std::vector<int64_t> GetPromotedShape(
     if (dim1 == 0 || dim2 == 0) {
       dimensions.push_back(0);
     } if(dim1 == kUnboundedSize || dim2 == kUnboundedSize) {
-      std::cout << "One of sim1/2 is dynamic\n";
       // dim1 dim2 inferred-dimension
       // ?      ?      ?
       // 1      ?      ?
@@ -136,10 +127,8 @@ std::vector<int64_t> GetPromotedShape(
       // ?      X      X
       // where X != kUnboundedSize && X != 1
       if(dim1 != kUnboundedSize && dim1 != 1) {
-        std::cout << "One of dim1  is non-dynamic\n";
         dimensions.push_back(dim1);
       } else if(dim2 != kUnboundedSize && dim2 != 1) {
-        std::cout << "One of dim2  is non-dynamic\n";
         dimensions.push_back(dim2);
       } else {
         dimensions.push_back(kUnboundedSize);
@@ -148,9 +137,6 @@ std::vector<int64_t> GetPromotedShape(
       dimensions.push_back(std::max<int64_t>(dim1, dim2));
     }
   }
-  std::cout << "\tinferred dimensions:[";
-  for(auto x : dimensions) std::cout << x << ", ";
-  std::cout << "]\n";
   return dimensions;
 }
 
